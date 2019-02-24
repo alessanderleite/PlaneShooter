@@ -20,3 +20,4 @@ public class StartGame extends Activity {
         setContentView(gameView);
     }
 }
+
