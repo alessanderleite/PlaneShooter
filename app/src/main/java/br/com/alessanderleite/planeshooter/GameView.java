@@ -24,7 +24,7 @@ public class GameView extends View {
     Handler handler;
     Runnable runnable;
     final long UPDATE_MILLIS = 30;
-    int tankWidth, tankHeight;
+    static int tankWidth, tankHeight;
 
     public GameView(Context context) {
         super(context);
