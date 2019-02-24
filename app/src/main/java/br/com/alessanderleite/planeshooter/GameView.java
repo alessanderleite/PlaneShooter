@@ -15,17 +15,19 @@ import java.util.ArrayList;
 
 public class GameView extends View {
 
-    Bitmap background;
+    Bitmap background, tank;
     Rect rect;
     static int dWidth, dHeight;
-    ArrayList<Plane> planes;
+    ArrayList<Plane> planes, planes2;
     Handler handler;
     Runnable runnable;
     final long UPDATE_MILLIS = 30;
+    int tankWidth, tankHeight;
 
     public GameView(Context context) {
         super(context);
         background = BitmapFactory.decodeResource(getResources(), R.drawable.background);
+        tank = BitmapFactory.decodeResource(getResources(), R.drawable.tank);
         Display display = ((Activity)getContext()).getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -33,9 +35,12 @@ public class GameView extends View {
         dHeight = size.y;
         rect = new Rect(0,0,dWidth,dHeight);
         planes = new ArrayList<>();
+        planes2 = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             Plane plane = new Plane(context);
             planes.add(plane);
+            Plane2 plane2 = new Plane2(context);
+            planes2.add(plane2);
         }
 
         handler = new Handler();
@@ -45,6 +50,8 @@ public class GameView extends View {
                 invalidate();
             }
         };
+        tankWidth = tank.getWidth();
+        tankHeight = tank.getHeight();
     }
 
     @Override
@@ -62,7 +69,17 @@ public class GameView extends View {
             if (planes.get(i).planeX < -planes.get(i).getWidth()) {
                 planes.get(i).resetPosition();
             }
+            canvas.drawBitmap(planes2.get(i).getBitmap(), planes2.get(i).planeX, planes2.get(i).planeY, null);
+            planes2.get(i).planeFrame++;
+            if (planes2.get(i).planeFrame > 9) {
+                planes2.get(i).planeFrame = 0;
+            }
+            planes2.get(i).planeX += planes2.get(i).velocity;
+            if (planes2.get(i).planeX > (dWidth + planes2.get(i).getWidth())) {
+                planes2.get(i).resetPosition();
+            }
         }
+        canvas.drawBitmap(tank,(dWidth/2 - tankWidth/2), dHeight - tankHeight, null);
         handler.postDelayed(runnable, UPDATE_MILLIS);
     }
 }
