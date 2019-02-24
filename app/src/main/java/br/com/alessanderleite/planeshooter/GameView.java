@@ -21,13 +21,16 @@ public class GameView extends View {
     Rect rect;
     static int dWidth, dHeight;
     ArrayList<Plane> planes, planes2;
+    ArrayList<Missile> missiles;
     Handler handler;
     Runnable runnable;
     final long UPDATE_MILLIS = 30;
     static int tankWidth, tankHeight;
+    Context context;
 
     public GameView(Context context) {
         super(context);
+        this.context = context;
         background = BitmapFactory.decodeResource(getResources(), R.drawable.background);
         tank = BitmapFactory.decodeResource(getResources(), R.drawable.tank);
         Display display = ((Activity)getContext()).getWindowManager().getDefaultDisplay();
@@ -38,6 +41,7 @@ public class GameView extends View {
         rect = new Rect(0,0,dWidth,dHeight);
         planes = new ArrayList<>();
         planes2 = new ArrayList<>();
+        missiles = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             Plane plane = new Plane(context);
             planes.add(plane);
@@ -81,6 +85,14 @@ public class GameView extends View {
                 planes2.get(i).resetPosition();
             }
         }
+        for (int i = 0; i < missiles.size(); i++) {
+            if (missiles.get(i).y > -missiles.get(i).getMissileHeight()) {
+                missiles.get(i).y -= missiles.get(i).mVelocity;
+                canvas.drawBitmap(missiles.get(i).missile, missiles.get(i).x, missiles.get(i).y, null);
+            } else {
+                missiles.remove(i);
+            }
+        }
         canvas.drawBitmap(tank,(dWidth/2 - tankWidth/2), dHeight - tankHeight, null);
         handler.postDelayed(runnable, UPDATE_MILLIS);
     }
@@ -93,6 +105,10 @@ public class GameView extends View {
         if (action == MotionEvent.ACTION_DOWN) {
             if (touchX >= (dWidth/2 - tankWidth/2) && touchX <= (dWidth/2 + tankWidth/2) && touchY >= (dHeight - tankHeight)) {
                 Log.i("TANK", "is tapped");
+                if (missiles.size() < 3) {
+                    Missile m = new Missile(context);
+                    missiles.add(m);
+                }
             }
         }
 
