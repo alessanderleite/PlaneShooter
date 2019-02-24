@@ -8,7 +8,9 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -81,5 +83,19 @@ public class GameView extends View {
         }
         canvas.drawBitmap(tank,(dWidth/2 - tankWidth/2), dHeight - tankHeight, null);
         handler.postDelayed(runnable, UPDATE_MILLIS);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float touchX = event.getX();
+        float touchY = event.getY();
+        int action = event.getAction();
+        if (action == MotionEvent.ACTION_DOWN) {
+            if (touchX >= (dWidth/2 - tankWidth/2) && touchX <= (dWidth/2 + tankWidth/2) && touchY >= (dHeight - tankHeight)) {
+                Log.i("TANK", "is tapped");
+            }
+        }
+
+        return true;
     }
 }
