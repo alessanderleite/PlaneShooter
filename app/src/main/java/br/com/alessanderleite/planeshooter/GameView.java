@@ -27,6 +27,7 @@ public class GameView extends View {
     final long UPDATE_MILLIS = 30;
     static int tankWidth, tankHeight;
     Context context;
+    int count = 0;
 
     public GameView(Context context) {
         super(context);
@@ -89,6 +90,34 @@ public class GameView extends View {
             if (missiles.get(i).y > -missiles.get(i).getMissileHeight()) {
                 missiles.get(i).y -= missiles.get(i).mVelocity;
                 canvas.drawBitmap(missiles.get(i).missile, missiles.get(i).x, missiles.get(i).y, null);
+                if (missiles.get(i).x >= planes.get(0).planeX && (missiles.get(i).x + missiles.get(i).getMissileWidth())
+                        <= (planes.get(0).planeX + planes.get(0).getWidth()) &&
+                        missiles.get(i).y >= planes.get(0).planeY && missiles.get(i).y <= (planes.get(0).planeY + planes.get(0).getHeight())) {
+                    planes.get(0).resetPosition();
+                    count++;
+                    missiles.remove(i);
+                }
+                else if (missiles.get(i).x >= planes.get(1).planeX && (missiles.get(i).x + missiles.get(i).getMissileWidth())
+                        <= (planes.get(1).planeX + planes.get(1).getWidth()) &&
+                        missiles.get(i).y >= planes.get(1).planeY && missiles.get(i).y <= (planes.get(1).planeY + planes.get(1).getHeight())) {
+                    planes.get(1).resetPosition();
+                    count++;
+                    missiles.remove(i);
+                }
+                else if (missiles.get(i).x >= planes2.get(0).planeX && (missiles.get(i).x + missiles.get(i).getMissileWidth())
+                        <= (planes2.get(0).planeX + planes2.get(0).getWidth()) &&
+                        missiles.get(i).y >= planes2.get(0).planeY && missiles.get(i).y <= (planes2.get(0).planeY + planes2.get(0).getHeight())) {
+                    planes2.get(0).resetPosition();
+                    count++;
+                    missiles.remove(i);
+                }
+                else if (missiles.get(i).x >= planes2.get(1).planeX && (missiles.get(i).x + missiles.get(i).getMissileWidth())
+                        <= (planes2.get(1).planeX + planes2.get(1).getWidth()) &&
+                        missiles.get(i).y >= planes2.get(1).planeY && missiles.get(i).y <= (planes2.get(1).planeY + planes2.get(1).getHeight())) {
+                    planes2.get(1).resetPosition();
+                    count++;
+                    missiles.remove(i);
+                }
             } else {
                 missiles.remove(i);
             }
