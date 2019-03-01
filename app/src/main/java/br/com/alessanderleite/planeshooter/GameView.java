@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
@@ -28,6 +30,8 @@ public class GameView extends View {
     static int tankWidth, tankHeight;
     Context context;
     int count = 0;
+    SoundPool sp;
+    int fire = 0, point = 0;
 
     public GameView(Context context) {
         super(context);
@@ -59,6 +63,9 @@ public class GameView extends View {
         };
         tankWidth = tank.getWidth();
         tankHeight = tank.getHeight();
+        sp = new SoundPool(3, AudioManager.STREAM_MUSIC,0);
+        fire = sp.load(context, R.raw.fire, 1);
+        point = sp.load(context, R.raw.point,1);
     }
 
     @Override
@@ -96,6 +103,9 @@ public class GameView extends View {
                     planes.get(0).resetPosition();
                     count++;
                     missiles.remove(i);
+                    if (point != 0) {
+                        sp.play(point,1,1,0,0,1);
+                    }
                 }
                 else if (missiles.get(i).x >= planes.get(1).planeX && (missiles.get(i).x + missiles.get(i).getMissileWidth())
                         <= (planes.get(1).planeX + planes.get(1).getWidth()) &&
@@ -103,6 +113,9 @@ public class GameView extends View {
                     planes.get(1).resetPosition();
                     count++;
                     missiles.remove(i);
+                    if (point != 0) {
+                        sp.play(point,1,1,0,0,1);
+                    }
                 }
                 else if (missiles.get(i).x >= planes2.get(0).planeX && (missiles.get(i).x + missiles.get(i).getMissileWidth())
                         <= (planes2.get(0).planeX + planes2.get(0).getWidth()) &&
@@ -110,6 +123,9 @@ public class GameView extends View {
                     planes2.get(0).resetPosition();
                     count++;
                     missiles.remove(i);
+                    if (point != 0) {
+                        sp.play(point,1,1,0,0,1);
+                    }
                 }
                 else if (missiles.get(i).x >= planes2.get(1).planeX && (missiles.get(i).x + missiles.get(i).getMissileWidth())
                         <= (planes2.get(1).planeX + planes2.get(1).getWidth()) &&
@@ -117,6 +133,9 @@ public class GameView extends View {
                     planes2.get(1).resetPosition();
                     count++;
                     missiles.remove(i);
+                    if (point != 0) {
+                        sp.play(point,1,1,0,0,1);
+                    }
                 }
             } else {
                 missiles.remove(i);
@@ -137,6 +156,9 @@ public class GameView extends View {
                 if (missiles.size() < 3) {
                     Missile m = new Missile(context);
                     missiles.add(m);
+                    if (fire != 0) {
+                        sp.play(fire, 1, 1, 0, 0, 1);
+                    }
                 }
             }
         }
