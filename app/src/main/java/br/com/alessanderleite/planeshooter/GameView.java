@@ -2,6 +2,7 @@ package br.com.alessanderleite.planeshooter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -34,8 +35,9 @@ public class GameView extends View {
     int count = 0;
     SoundPool sp;
     int fire = 0, point = 0;
-    Paint scorePaint;
+    Paint scorePaint, healthPaint;
     final int TEXT_SIZE = 60;
+    int life = 10;
 
     public GameView(Context context) {
         super(context);
@@ -74,11 +76,19 @@ public class GameView extends View {
         scorePaint.setColor(Color.RED);
         scorePaint.setTextSize(TEXT_SIZE);
         scorePaint.setTextAlign(Paint.Align.LEFT);
+        healthPaint = new Paint();
+        healthPaint.setColor(Color.GREEN);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (life < 1) {
+            //Intent intent = new Intent(context, GameOver.class);
+            //intent.putExtra("score", (count * 10));
+            //context.startActivity(intent);
+            ((Activity) context).finish();
+        }
         canvas.drawBitmap(background,0,0,null);
         canvas.drawBitmap(background,null,rect,null);
         for (int i = 0; i < planes.size(); i++) {
@@ -90,6 +100,7 @@ public class GameView extends View {
             planes.get(i).planeX -= planes.get(i).velocity;
             if (planes.get(i).planeX < -planes.get(i).getWidth()) {
                 planes.get(i).resetPosition();
+                life--;
             }
             canvas.drawBitmap(planes2.get(i).getBitmap(), planes2.get(i).planeX, planes2.get(i).planeY, null);
             planes2.get(i).planeFrame++;
@@ -99,6 +110,7 @@ public class GameView extends View {
             planes2.get(i).planeX += planes2.get(i).velocity;
             if (planes2.get(i).planeX > (dWidth + planes2.get(i).getWidth())) {
                 planes2.get(i).resetPosition();
+                life--;
             }
         }
         for (int i = 0; i < missiles.size(); i++) {
@@ -151,6 +163,7 @@ public class GameView extends View {
         }
         canvas.drawBitmap(tank,(dWidth/2 - tankWidth/2), dHeight - tankHeight, null);
         canvas.drawText("Pt: " + (count * 10), 0, TEXT_SIZE, scorePaint);
+        canvas.drawRect(dWidth - 110, 10, dWidth - 110 + 10 * life, TEXT_SIZE, healthPaint);
         handler.postDelayed(runnable, UPDATE_MILLIS);
     }
 
