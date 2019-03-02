@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.AudioManager;
@@ -32,6 +34,8 @@ public class GameView extends View {
     int count = 0;
     SoundPool sp;
     int fire = 0, point = 0;
+    Paint scorePaint;
+    final int TEXT_SIZE = 60;
 
     public GameView(Context context) {
         super(context);
@@ -66,6 +70,10 @@ public class GameView extends View {
         sp = new SoundPool(3, AudioManager.STREAM_MUSIC,0);
         fire = sp.load(context, R.raw.fire, 1);
         point = sp.load(context, R.raw.point,1);
+        scorePaint = new Paint();
+        scorePaint.setColor(Color.RED);
+        scorePaint.setTextSize(TEXT_SIZE);
+        scorePaint.setTextAlign(Paint.Align.LEFT);
     }
 
     @Override
@@ -142,6 +150,7 @@ public class GameView extends View {
             }
         }
         canvas.drawBitmap(tank,(dWidth/2 - tankWidth/2), dHeight - tankHeight, null);
+        canvas.drawText("Pt: " + (count * 10), 0, TEXT_SIZE, scorePaint);
         handler.postDelayed(runnable, UPDATE_MILLIS);
     }
 
