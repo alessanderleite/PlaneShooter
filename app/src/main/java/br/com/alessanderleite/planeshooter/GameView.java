@@ -27,6 +27,7 @@ public class GameView extends View {
     static int dWidth, dHeight;
     ArrayList<Plane> planes, planes2;
     ArrayList<Missile> missiles;
+    ArrayList<Explosion> explosions;
     Handler handler;
     Runnable runnable;
     final long UPDATE_MILLIS = 30;
@@ -53,6 +54,7 @@ public class GameView extends View {
         planes = new ArrayList<>();
         planes2 = new ArrayList<>();
         missiles = new ArrayList<>();
+        explosions = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             Plane plane = new Plane(context);
             planes.add(plane);
@@ -120,6 +122,10 @@ public class GameView extends View {
                 if (missiles.get(i).x >= planes.get(0).planeX && (missiles.get(i).x + missiles.get(i).getMissileWidth())
                         <= (planes.get(0).planeX + planes.get(0).getWidth()) &&
                         missiles.get(i).y >= planes.get(0).planeY && missiles.get(i).y <= (planes.get(0).planeY + planes.get(0).getHeight())) {
+                    Explosion explosion = new Explosion(context);
+                    explosion.explosionX = planes.get(0).planeX + planes.get(0).getWidth()/2 - explosion.getExplosionWidth()/2;
+                    explosion.explosionY = planes.get(0).planeY + planes.get(0).getHeight()/2 - explosion.getExplosionHeight()/2;
+                    explosions.add(explosion);
                     planes.get(0).resetPosition();
                     count++;
                     missiles.remove(i);
@@ -130,6 +136,10 @@ public class GameView extends View {
                 else if (missiles.get(i).x >= planes.get(1).planeX && (missiles.get(i).x + missiles.get(i).getMissileWidth())
                         <= (planes.get(1).planeX + planes.get(1).getWidth()) &&
                         missiles.get(i).y >= planes.get(1).planeY && missiles.get(i).y <= (planes.get(1).planeY + planes.get(1).getHeight())) {
+                    Explosion explosion = new Explosion(context);
+                    explosion.explosionX = planes.get(1).planeX + planes.get(1).getWidth()/2 - explosion.getExplosionWidth()/2;
+                    explosion.explosionY = planes.get(1).planeY + planes.get(1).getHeight()/2 - explosion.getExplosionHeight()/2;
+                    explosions.add(explosion);
                     planes.get(1).resetPosition();
                     count++;
                     missiles.remove(i);
@@ -140,6 +150,10 @@ public class GameView extends View {
                 else if (missiles.get(i).x >= planes2.get(0).planeX && (missiles.get(i).x + missiles.get(i).getMissileWidth())
                         <= (planes2.get(0).planeX + planes2.get(0).getWidth()) &&
                         missiles.get(i).y >= planes2.get(0).planeY && missiles.get(i).y <= (planes2.get(0).planeY + planes2.get(0).getHeight())) {
+                    Explosion explosion = new Explosion(context);
+                    explosion.explosionX = planes2.get(0).planeX + planes2.get(0).getWidth()/2 - explosion.getExplosionWidth()/2;
+                    explosion.explosionY = planes2.get(0).planeY + planes2.get(0).getHeight()/2 - explosion.getExplosionHeight()/2;
+                    explosions.add(explosion);
                     planes2.get(0).resetPosition();
                     count++;
                     missiles.remove(i);
@@ -150,6 +164,10 @@ public class GameView extends View {
                 else if (missiles.get(i).x >= planes2.get(1).planeX && (missiles.get(i).x + missiles.get(i).getMissileWidth())
                         <= (planes2.get(1).planeX + planes2.get(1).getWidth()) &&
                         missiles.get(i).y >= planes2.get(1).planeY && missiles.get(i).y <= (planes2.get(1).planeY + planes2.get(1).getHeight())) {
+                    Explosion explosion = new Explosion(context);
+                    explosion.explosionX = planes2.get(1).planeX + planes2.get(1).getWidth()/2 - explosion.getExplosionWidth()/2;
+                    explosion.explosionY = planes2.get(1).planeY + planes2.get(1).getHeight()/2 - explosion.getExplosionHeight()/2;
+                    explosions.add(explosion);
                     planes2.get(1).resetPosition();
                     count++;
                     missiles.remove(i);
@@ -160,6 +178,15 @@ public class GameView extends View {
             } else {
                 missiles.remove(i);
             }
+        }
+        for (int j = 0; j < explosions.size(); j++) {
+            canvas.drawBitmap(explosions.get(j).getExplosion(explosions.get(j).explosionFrame), explosions.get(j).explosionX,
+                    explosions.get(j).explosionY, null);
+            explosions.get(j).explosionFrame++;
+            if (explosions.get(j).explosionFrame > 8) {
+                explosions.remove(j);
+            }
+
         }
         canvas.drawBitmap(tank,(dWidth/2 - tankWidth/2), dHeight - tankHeight, null);
         canvas.drawText("Pt: " + (count * 10), 0, TEXT_SIZE, scorePaint);
