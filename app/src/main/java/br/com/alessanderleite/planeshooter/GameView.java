@@ -85,12 +85,7 @@ public class GameView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (life < 1) {
-            //Intent intent = new Intent(context, GameOver.class);
-            //intent.putExtra("score", (count * 10));
-            //context.startActivity(intent);
-            ((Activity) context).finish();
-        }
+
         canvas.drawBitmap(background,0,0,null);
         canvas.drawBitmap(background,null,rect,null);
         for (int i = 0; i < planes.size(); i++) {
@@ -103,6 +98,12 @@ public class GameView extends View {
             if (planes.get(i).planeX < -planes.get(i).getWidth()) {
                 planes.get(i).resetPosition();
                 life--;
+                if (life == 0) {
+                    Intent intent = new Intent(context, GameOver.class);
+                    intent.putExtra("score", (count * 10));
+                    context.startActivity(intent);
+                    ((Activity) context).finish();
+                }
             }
             canvas.drawBitmap(planes2.get(i).getBitmap(), planes2.get(i).planeX, planes2.get(i).planeY, null);
             planes2.get(i).planeFrame++;
@@ -113,6 +114,12 @@ public class GameView extends View {
             if (planes2.get(i).planeX > (dWidth + planes2.get(i).getWidth())) {
                 planes2.get(i).resetPosition();
                 life--;
+                if (life == 0) {
+                    Intent intent = new Intent(context, GameOver.class);
+                    intent.putExtra("score", (count * 10));
+                    context.startActivity(intent);
+                    ((Activity) context).finish();
+                }
             }
         }
         for (int i = 0; i < missiles.size(); i++) {
